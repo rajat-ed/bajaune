@@ -1,0 +1,1690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bajaune — Professional Theatre Soundboard</title>
+    <style>
+        :root {
+            --bg-base: #121214;
+            --bg-surface: #1a1a1e;
+            --bg-element: #26262b;
+            --bg-element-active: #323239;
+            --border-color: #2e2e35;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.25);
+            --accent-active: #3b82f6;
+            --success: #10b981;
+            --success-glow: rgba(16, 185, 129, 0.25);
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --radius-lg: 8px;
+            --radius-md: 6px;
+            --radius-sm: 4px;
+            --font-stack: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            --transition-speed: 0.15s;
+        }
+
+        [data-theme="light"] {
+            --bg-base: #f4f4f5;
+            --bg-surface: #ffffff;
+            --bg-element: #e4e4e7;
+            --bg-element-active: #d4d4d8;
+            --border-color: #e4e4e7;
+            --text-main: #18181b;
+            --text-muted: #71717a;
+            --accent: #2563eb;
+            --accent-glow: rgba(37, 99, 235, 0.15);
+            --accent-active: #1d4ed8;
+            --success: #059669;
+            --success-glow: rgba(5, 150, 105, 0.2);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+            -webkit-user-drag: none;
+        }
+
+        body {
+            font-family: var(--font-stack);
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+            display: flex;
+            flex-direction: column;
+            font-size: 13px;
+            line-height: 1.4;
+            letter-spacing: -0.01em;
+        }
+
+        input, button, select {
+            font-family: inherit;
+            font-size: inherit;
+            color: inherit;
+            background: none;
+            border: none;
+        }
+
+        *:focus-visible {
+            outline: 2px solid var(--accent);
+            outline-offset: 1px;
+        }
+
+        .top-toolbar {
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            height: 52px;
+            min-height: 52px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            z-index: 10;
+        }
+
+        .branding-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .app-title {
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--text-main), var(--text-muted));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .action-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn {
+            background-color: var(--bg-element);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 6px 12px;
+            font-weight: 500;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+            height: 32px;
+        }
+
+        .btn:hover {
+            background-color: var(--bg-element-active);
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            border-color: transparent;
+            color: #ffffff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-active);
+        }
+
+        .btn-danger {
+            background-color: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.3);
+            color: var(--danger);
+            border-top-right-radius: 0;
+            border-bottom-right-radius: 0;
+        }
+
+        .btn-danger:hover {
+            background-color: rgba(239, 68, 68, 0.25);
+        }
+
+        .stop-split-control {
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .select-stop-global {
+            background-color: var(--bg-element);
+            border: 1px solid var(--border-color);
+            border-left: none;
+            border-top-right-radius: var(--radius-md);
+            border-bottom-right-radius: var(--radius-md);
+            height: 32px;
+            padding: 0 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            color: var(--text-main);
+            transition: background-color var(--transition-speed);
+        }
+
+        .select-stop-global:hover {
+            background-color: var(--bg-element-active);
+        }
+
+        .btn-lock-active {
+            background-color: rgba(16, 185, 129, 0.15);
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .search-input {
+            background-color: var(--bg-element);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-md);
+            padding: 0 12px 0 32px;
+            height: 32px;
+            width: 200px;
+            transition: width 0.2s, border-color var(--transition-speed);
+        }
+
+        .search-input:focus {
+            width: 240px;
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .master-volume-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border-left: 1px solid var(--border-color);
+            border-right: 1px solid var(--border-color);
+            padding: 0 12px;
+            margin: 0 4px;
+            height: 32px;
+        }
+
+        .slider-custom {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 90px;
+            height: 4px;
+            border-radius: 2px;
+            background: var(--bg-element);
+            outline: none;
+            cursor: pointer;
+        }
+
+        .slider-custom::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--text-main);
+            cursor: pointer;
+            transition: transform 0.1s;
+        }
+
+        .slider-custom::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+        }
+
+        .select-custom {
+            background-color: var(--bg-element);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-sm);
+            padding: 2px 6px;
+            height: 22px;
+            font-size: 11px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .select-custom:hover {
+            background-color: var(--bg-element-active);
+        }
+
+        .workspace-container {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .grid-viewport {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px;
+            align-content: start;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 12px;
+        }
+
+        .grid-viewport.dense-grid {
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+            padding: 8px;
+        }
+
+        .grid-viewport.dense-grid .sound-card {
+            padding: 8px;
+            gap: 6px;
+        }
+
+        .grid-viewport.dense-grid .waveform-canvas {
+            height: 24px;
+        }
+
+        .grid-viewport.dense-grid .behaviour-settings-row {
+            display: none !important;
+        }
+
+        .sound-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius-lg);
+            padding: 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            position: relative;
+            transition: border-color var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed);
+        }
+
+        .sound-card:hover {
+            border-color: var(--bg-element-active);
+        }
+
+        .sound-card.is-playing {
+            border-color: var(--success);
+            box-shadow: 0 0 12px var(--success-glow);
+            background-color: rgba(16, 185, 129, 0.02);
+        }
+
+        .sound-card.is-fading {
+            border-color: var(--warning);
+            box-shadow: 0 0 12px rgba(245, 158, 11, 0.15);
+            background-color: rgba(245, 158, 11, 0.02);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .card-title-group {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .card-title {
+            font-weight: 600;
+            font-size: 14px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            color: var(--text-main);
+        }
+
+        .card-meta {
+            font-size: 11px;
+            color: var(--text-muted);
+            margin-top: 2px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+        }
+
+        .key-badge {
+            background-color: var(--bg-element);
+            border: 2px solid var(--border-color);
+            border-radius: var(--radius-md);
+            color: var(--text-main);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", monospace;
+            font-size: 18px; 
+            font-weight: 800; 
+            padding: 6px 12px;
+            min-width: 44px;
+            height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: all var(--transition-speed) cubic-bezier(0.16, 1, 0.3, 1);
+            letter-spacing: -0.02em;
+        }
+
+        .key-badge:hover {
+            background-color: var(--bg-element-active);
+            border-color: var(--text-muted);
+            transform: translateY(-1px);
+        }
+
+        .key-badge.binding-active {
+            background-color: var(--accent);
+            border-color: var(--accent-active);
+            color: #ffffff;
+            box-shadow: 0 0 14px var(--accent-glow);
+            animation: pulse-border 1s infinite alternate;
+        }
+
+        .sound-card.is-playing .key-badge {
+            background-color: var(--success);
+            border-color: #12a573;
+            color: #ffffff;
+            box-shadow: 0 0 10px var(--success-glow);
+        }
+
+        .sound-card.is-fading .key-badge {
+            background-color: var(--warning);
+            border-color: #d97706;
+            color: #ffffff;
+            box-shadow: 0 0 10px rgba(245, 158, 11, 0.3);
+        }
+
+        .key-assign-select {
+            position: absolute;
+            opacity: 0;
+            pointer-events: none;
+            width: 1px;
+            height: 1px;
+        }
+
+        .behaviour-settings-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 6px;
+            font-size: 11px;
+            border-top: 1px solid rgba(255,255,255,0.03);
+            padding-top: 6px;
+        }
+
+        .behaviour-controls {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .visualizer-container {
+            position: relative;
+            background-color: rgba(0,0,0,0.15);
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+            height: 40px;
+        }
+
+        .waveform-canvas {
+            width: 100%;
+            height: 40px;
+            display: block;
+        }
+
+        .progress-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background-color: rgba(255,255,255,0.05);
+            pointer-events: none;
+        }
+
+        .progress-bar {
+            height: 100%;
+            width: 0%;
+            background-color: var(--accent);
+            transition: width 0.1s linear;
+        }
+
+        .sound-card.is-playing .progress-bar {
+            background-color: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        .sound-card.is-fading .progress-bar {
+            background-color: var(--warning);
+            box-shadow: none;
+            opacity: 0.5;
+        }
+
+        .card-controls {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 8px;
+            margin-top: auto;
+        }
+
+        .volume-inline {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            flex: 1;
+        }
+
+        .volume-inline .slider-custom {
+            width: 100%;
+        }
+
+        .card-actions {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .icon-btn {
+            width: 26px;
+            height: 26px;
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+
+        .icon-btn:hover {
+            background-color: var(--bg-element);
+            color: var(--text-main);
+        }
+
+        .icon-btn.active-loop {
+            color: var(--success);
+            background-color: var(--success-glow);
+        }
+
+        body.performance-locked .editable-element,
+        body.performance-locked .icon-btn-edit,
+        body.performance-locked .behaviour-settings-row {
+            display: none !important;
+        }
+
+        body.performance-locked .key-badge {
+            cursor: default;
+            pointer-events: none;
+        }
+
+        .empty-state {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+        }
+
+        .empty-state-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            opacity: 0.4;
+        }
+
+        .empty-state h2 {
+            color: var(--text-main);
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .empty-state p {
+            max-width: 380px;
+            margin-bottom: 24px;
+            font-size: 13px;
+        }
+
+        .bottom-status-bar {
+            height: 28px;
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            font-size: 11px;
+            color: var(--text-muted);
+            z-index: 10;
+        }
+
+        .diagnostic-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--text-muted);
+        }
+
+        .status-dot.active {
+            background-color: var(--success);
+            box-shadow: 0 0 6px var(--success);
+        }
+
+        .credit-text {
+            opacity: 0.6;
+            font-weight: 500;
+        }
+
+        .toast-container {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            pointer-events: none;
+        }
+
+        .toast {
+            background-color: #1f2937;
+            color: #ffffff;
+            border: 1px solid #374151;
+            padding: 8px 16px;
+            border-radius: var(--radius-md);
+            font-size: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            pointer-events: auto;
+            animation: slide-up 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        @keyframes slide-up {
+            from { transform: translateY(12px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes pulse-border {
+            from { box-shadow: 0 0 0 0px rgba(37, 99, 235, 0.4); }
+            to { box-shadow: 0 0 0 4px rgba(37, 99, 235, 0); }
+        }
+
+        .icon {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+            display: inline-block;
+            vertical-align: middle;
+        }
+    </style>
+</head>
+<body>
+
+    <svg style="display: none;">
+        <symbol id="icon-folder" viewBox="0 0 20 20">
+            <path d="M2 6a2 2 0 012-2h5l2 2h5a2 2 0 012 2v6a2 2 0 01-2 2H4a2 2 0 01-2-2V6z"/>
+        </symbol>
+        <symbol id="icon-stop" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8 7a1 1 0 00-1 1v4a1 1 0 001 1h4a1 1 0 001-1V8a1 1 0 00-1-1H8z" clip-rule="evenodd"/>
+        </symbol>
+        <symbol id="icon-save" viewBox="0 0 20 20">
+            <path d="M7.707 10.293a1 1 0 10-1.414 1.414l3 3a1 1 0 001.414 0l3-3a1 1 0 00-1.414-1.414L11 11.586V6a1 1 0 10-2 0v5.586L7.707 10.293z"/>
+            <path d="M5 5a2 2 0 00-2 2v8a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-1.586l-1 1H5z"/>
+        </symbol>
+        <symbol id="icon-search" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+        </symbol>
+        <symbol id="icon-loop" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M4 2a1 1 0 011 1v2.101a7.002 7.002 0 0111.601 2.566 1 1 0 11-1.885.666A5.002 5.002 0 005.999 7H9a1 1 0 110 2H4a1 1 0 01-1-1V3a1 1 0 011-1zm.008 9.057a1 1 0 011.276.61A5.002 5.002 0 0014.001 13H11a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0v-2.101a7.002 7.002 0 01-11.601-2.566 1 1 0 01.61-1.276z" clip-rule="evenodd"/>
+        </symbol>
+        <symbol id="icon-trash" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd"/>
+        </symbol>
+        <symbol id="icon-lock" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/>
+        </symbol>
+        <symbol id="icon-unlock" viewBox="0 0 20 20">
+            <path d="M10 2a5 5 0 00-5 5v2a2 2 0 00-2 2v5a2 2 0 002 2h10a2 2 0 002-2v-5a2 2 0 00-2-2H7V7a3 3 0 016 0 1 1 0 002 0 5 5 0 00-5-5z"/>
+        </symbol>
+    </svg>
+
+    <header class="top-toolbar">
+        <div class="branding-group">
+            <span class="app-title">Bajaune</span>
+            <button class="btn editable-element" id="btn-load" title="Load Audio Workspace Folder/Files">
+                <svg class="icon"><use href="#icon-folder"></use></svg>
+                <span>Load Sounds</span>
+            </button>
+            <input type="file" id="fallback-file-input" multiple accept="audio/*" style="display: none;">
+        </div>
+
+        <div class="action-group">
+            <div class="search-wrapper">
+                <svg class="icon search-icon"><use href="#icon-search"></use></svg>
+                <input type="text" class="search-input" id="search-bar" placeholder="Filter cues (Shortcut: /)..." aria-label="Search sound cues">
+            </div>
+
+            <div class="master-volume-group">
+                <span style="font-size: 11px; font-weight: 600;">MASTER</span>
+                <input type="range" class="slider-custom" id="master-volume" min="0" max="1" step="0.01" value="0.8" title="Master Volume Control">
+            </div>
+
+            <button class="btn editable-element" id="btn-save-cfg" title="Export Configuration JSON">
+                <svg class="icon"><use href="#icon-save"></use></svg>
+                <span>Save Setup</span>
+            </button>
+            <button class="btn editable-element" id="btn-load-cfg" title="Import Configuration JSON">
+                <span>Load Setup</span>
+            </button>
+
+            <!-- Global Spacebar Interlock Layout Mode Selection Split -->
+            <div class="stop-split-control">
+                <button class="btn btn-danger" id="btn-stop-all" title="Emergency Stop All Sounds (Spacebar)">
+                    <svg class="icon"><use href="#icon-stop"></use></svg>
+                    <span>STOP ALL [Space]</span>
+                </button>
+                <select class="select-stop-global" id="global-stop-behaviour" title="Global Spacebar Termination Behavior Mode">
+                    <option value="abrupt">ABRUPT</option>
+                    <option value="fade">FADE OUT</option>
+                </select>
+            </div>
+
+            <button class="btn" id="btn-lock" title="Toggle Live Performance Mode Lock">
+                <svg class="icon" id="lock-icon"><use href="#icon-unlock"></use></svg>
+                <span id="lock-text">Performance Lock</span>
+            </button>
+
+            <button class="btn" id="btn-theme-toggle" title="Toggle Theme Palette Mode" style="padding: 6px 8px;">🌓</button>
+            <button class="btn" id="btn-fullscreen" title="Toggle Fullscreen" style="padding: 6px 8px;">⛶</button>
+        </div>
+    </header>
+
+    <main class="workspace-container">
+        <div class="grid-viewport" id="sound-grid"></div>
+
+        <div class="empty-state" id="empty-state-view">
+            <div class="empty-state-icon">📻</div>
+            <h2>No Sound Cues Loaded</h2>
+            <p>Load a directory containing your production assets, pick single items, or restore an operational matrix JSON configuration.</p>
+            <button class="btn btn-primary" id="btn-empty-load">
+                <svg class="icon"><use href="#icon-folder"></use></svg>
+                <span>Populate Audio Canvas</span>
+            </button>
+        </div>
+    </main>
+
+    <footer class="bottom-status-bar">
+        <div class="diagnostic-pill">
+            <div class="status-dot" id="diagnostic-dot"></div>
+            <span id="diagnostic-text">Engine Idle</span>
+        </div>
+        <div id="system-stats">Cues: 0 | Memory Footprint: Nominal</div>
+        <div class="credit-text">Created by Rajat</div>
+    </footer>
+
+    <div class="toast-container" id="toast-portal"></div>
+
+    <script>
+        (function() {
+            const AppState = {
+                audioCtx: null,
+                masterGainNode: null,
+                soundMap: new Map(),        
+                keyRegistry: new Map(),     
+                isLocked: false,
+                theme: 'dark',
+                activeBindingTarget: null,   
+                isSearching: false,
+                searchQuery: ''
+            };
+
+            const KEY_DISPLAY_LABELS = {
+                'ArrowUp': '↑',
+                'ArrowDown': '↓',
+                'ArrowLeft': '←',
+                'ArrowRight': '→',
+                'Escape': 'Esc',
+                'Delete': 'Del',
+                'Insert': 'Ins',
+                'PageUp': 'PgUp',
+                'PageDown': 'PgDn'
+            };
+
+            function initAudioEngine() {
+                if (AppState.audioCtx) return;
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                AppState.audioCtx = new AudioContextClass({ latencyHint: 'playback' });
+                AppState.masterGainNode = AppState.audioCtx.createGain();
+                AppState.masterGainNode.gain.setValueAtTime(0.8, AppState.audioCtx.currentTime);
+                AppState.masterGainNode.connect(AppState.audioCtx.destination);
+                updateDiagnostics("Audio Architecture Live");
+            }
+
+            class SoundCue {
+                constructor(id, name, fileBlob) {
+                    this.id = id;
+                    this.name = name;
+                    this.fileBlob = fileBlob;
+                    this.audioBuffer = null;
+                    this.assignedKey = null;
+                    this.volume = 1.0;
+                    this.loop = false;
+                    
+                    this.stopMode = 'abrupt'; 
+                    this.fadeDuration = 2;    
+                    
+                    this.activeSourceNode = null;
+                    this.activeGainNode = null;
+                    this.isPlaying = false;
+                    this.isFading = false;
+                    this.startTime = 0;
+                    this.duration = 0;
+                    this.fadeTimeoutId = null;
+                    
+                    this.domElement = null;
+                    this.animationFrameId = null;
+                    this.visualPeaks = [];
+                    this.generateMockPeaks();
+                }
+
+                generateMockPeaks() {
+                    this.visualPeaks = [];
+                    for(let i=0; i < 40; i++) {
+                        this.visualPeaks.push(Math.random() * 0.5 + 0.1);
+                    }
+                }
+
+                async asyncPreloadData() {
+                    try {
+                        const arrayBuffer = await this.fileBlob.arrayBuffer();
+                        this.audioBuffer = await AppState.audioCtx.decodeAudioData(arrayBuffer);
+                        this.duration = this.audioBuffer.duration;
+                        this.extractTruePeaks();
+                        this.updateDOMMetadata();
+                        return true;
+                    } catch (err) {
+                        console.error("Audio Decoding Failure: " + this.name, err);
+                        showToast(`Failed to parse payload: ${this.name}`);
+                        return false;
+                    }
+                }
+
+                extractTruePeaks() {
+                    if (!this.audioBuffer) return;
+                    const channelData = this.audioBuffer.getChannelData(0);
+                    const step = Math.floor(channelData.length / 50) || 1;
+                    this.visualPeaks = [];
+                    for (let i = 0; i < 50; i++) {
+                        let max = 0;
+                        const start = i * step;
+                        for (let j = 0; j < step && (start + j) < channelData.length; j++) {
+                            const val = Math.abs(channelData[start + j]);
+                            if (val > max) max = val;
+                        }
+                        this.visualPeaks.push(max * 0.9 + 0.05);
+                    }
+                }
+
+                renderDOMNode() {
+                    const card = document.createElement('div');
+                    card.className = 'sound-card';
+                    card.setAttribute('data-id', this.id);
+                    card.setAttribute('tabindex', '0');
+                    
+                    const displayKey = this.assignedKey ? formatKeyDisplay(this.assignedKey) : '—';
+                    
+                    card.innerHTML = `
+                        <div class="card-header">
+                            <div class="card-title-group">
+                                <div class="card-title" title="${this.name}">${this.name}</div>
+                                <div class="card-meta">
+                                    <span class="runtime-lbl-duration">0:00 / 0:00</span>
+                                    <span class="cue-state-badge" style="display:none; font-weight:bold;"></span>
+                                </div>
+                            </div>
+                            <button class="key-badge" title="Click to assign key shortcut">${displayKey}</button>
+                            <select class="key-assign-select" aria-label="Assignment Dropdown"></select>
+                        </div>
+
+                        <div class="behaviour-settings-row editable-element">
+                            <div class="behaviour-controls">
+                                <span>Stop:</span>
+                                <select class="select-custom sel-stop-mode">
+                                    <option value="abrupt" ${this.stopMode === 'abrupt' ? 'selected' : ''}>Abrupt</option>
+                                    <option value="fade" ${this.stopMode === 'fade' ? 'selected' : ''}>Fade Out</option>
+                                </select>
+                            </div>
+                            <div class="behaviour-controls sel-fade-time-container" style="display: ${this.stopMode === 'fade' ? 'flex' : 'none'}; gap: 4px;">
+                                <span>Time:</span>
+                                <select class="select-custom sel-fade-time">
+                                    <option value="1" ${this.fadeDuration === 1 ? 'selected' : ''}>1s</option>
+                                    <option value="2" ${this.fadeDuration === 2 ? 'selected' : ''}>2s</option>
+                                    <option value="3" ${this.fadeDuration === 3 ? 'selected' : ''}>3s</option>
+                                    <option value="4" ${this.fadeDuration === 4 ? 'selected' : ''}>4s</option>
+                                    <option value="5" ${this.fadeDuration === 5 ? 'selected' : ''}>5s</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="visualizer-container">
+                            <canvas class="waveform-canvas"></canvas>
+                            <div class="progress-container">
+                                <div class="progress-bar"></div>
+                            </div>
+                        </div>
+
+                        <div class="card-controls">
+                            <div class="volume-inline">
+                                🔊
+                                <input type="range" class="slider-custom val-vol-slider" min="0" max="1" step="0.05" value="${this.volume}" title="Volume slider">
+                            </div>
+                            <div class="card-actions">
+                                <button class="icon-btn act-loop-toggle ${this.loop ? 'active-loop' : ''}" title="Toggle Loop Mode">
+                                    <svg class="icon"><use href="#icon-loop"></use></svg>
+                                </button>
+                                <button class="icon-btn btn-primary act-play-trigger" title="Play cue">▶</button>
+                                <button class="icon-btn btn-danger act-stop-trigger" title="Stop cue">■</button>
+                                <button class="icon-btn icon-btn-edit act-remove-card" title="Remove cue">
+                                    <svg class="icon"><use href="#icon-trash"></use></svg>
+                                </button>
+                            </div>
+                        </div>
+                    `;
+
+                    this.domElement = card;
+                    this.populateDropdownOptions();
+                    this.bindCardInteractions();
+                    this.drawWaveformStatic();
+                    return card;
+                }
+
+                populateDropdownOptions() {
+                    const select = this.domElement.querySelector('.key-assign-select');
+                    select.innerHTML = '<option value="">None</option>';
+                    for (let i = 65; i <= 90; i++) {
+                        const char = String.fromCharCode(i);
+                        select.innerHTML += `<option value="Key${char}">${char}</option>`;
+                    }
+                    for (let i = 0; i <= 9; i++) {
+                        select.innerHTML += `<option value="Digit${i}">${i}</option>`;
+                    }
+                    for (let i = 1; i <= 12; i++) {
+                        select.innerHTML += `<option value="F${i}">F${i}</option>`;
+                    }
+                    const items = ['Enter', 'Escape', 'Tab', 'Delete', 'Minus', 'Equal'];
+                    items.forEach(k => select.innerHTML += `<option value="${k}">${k}</option>`);
+                    if(this.assignedKey) select.value = this.assignedKey;
+                }
+
+                updateDOMMetadata() {
+                    if (!this.domElement) return;
+                    const durationStr = formatTimeStrings(this.duration);
+                    this.domElement.querySelector('.runtime-lbl-duration').textContent = `0:00 / ${durationStr}`;
+                    this.drawWaveformStatic();
+                }
+
+                bindCardInteractions() {
+                    const badge = this.domElement.querySelector('.key-badge');
+                    const select = this.domElement.querySelector('.key-assign-select');
+                    
+                    badge.addEventListener('click', (e) => {
+                        if (AppState.isLocked) return;
+                        e.stopPropagation();
+                        if (AppState.activeBindingTarget) {
+                            AppState.activeBindingTarget.domElement.querySelector('.key-badge').classList.remove('binding-active');
+                        }
+                        AppState.activeBindingTarget = this;
+                        badge.classList.add('binding-active');
+                        showToast(`Press any key to map target: ${this.name}...`);
+                    });
+
+                    select.addEventListener('change', (e) => {
+                        if (AppState.isLocked) return;
+                        if(e.target.value === "") this.clearKeyBinding();
+                        else assignKeyToCue(e.target.value, this);
+                    });
+
+                    this.domElement.querySelector('.sel-stop-mode').addEventListener('change', (e) => {
+                        this.stopMode = e.target.value;
+                        const container = this.domElement.querySelector('.sel-fade-time-container');
+                        container.style.display = this.stopMode === 'fade' ? 'flex' : 'none';
+                    });
+
+                    this.domElement.querySelector('.sel-fade-time').addEventListener('change', (e) => {
+                        this.fadeDuration = parseInt(e.target.value, 10);
+                    });
+
+                    this.domElement.querySelector('.val-vol-slider').addEventListener('input', (e) => {
+                        this.volume = parseFloat(e.target.value);
+                        if (this.activeGainNode && AppState.audioCtx && !this.isFading) {
+                            this.activeGainNode.gain.setValueAtTime(this.volume, AppState.audioCtx.currentTime);
+                        }
+                    });
+
+                    this.domElement.querySelector('.act-loop-toggle').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.loop = !this.loop;
+                        e.currentTarget.classList.toggle('active-loop', this.loop);
+                        if (this.activeSourceNode) {
+                            this.activeSourceNode.loop = this.loop;
+                        }
+                    });
+
+                    this.domElement.querySelector('.act-play-trigger').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        initAudioEngine();
+                        if(AppState.audioCtx.state === 'suspended') AppState.audioCtx.resume();
+                        this.handleToggleAction();
+                    });
+
+                    this.domElement.querySelector('.act-stop-trigger').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        this.executeConfiguredStopBehaviour();
+                    });
+
+                    this.domElement.querySelector('.act-remove-card').addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (AppState.isLocked) return;
+                        if(confirm(`Remove cue: "${this.name}"?`)) this.destroyInstance();
+                    });
+                }
+
+                clearKeyBinding() {
+                    if (this.assignedKey) {
+                        AppState.keyRegistry.delete(this.assignedKey);
+                        this.assignedKey = null;
+                        this.domElement.querySelector('.key-badge').textContent = '—';
+                        this.domElement.querySelector('.key-assign-select').value = '';
+                    }
+                }
+
+                handleToggleAction() {
+                    if (this.isFading) {
+                        this.cancelFadeAndResetToLiveState();
+                        this.firePlaybackSequence();
+                        return;
+                    }
+
+                    if (this.isPlaying) {
+                        this.executeConfiguredStopBehaviour();
+                    } else {
+                        this.firePlaybackSequence();
+                    }
+                }
+
+                cancelFadeAndResetToLiveState() {
+                    if (this.fadeTimeoutId) {
+                        clearTimeout(this.fadeTimeoutId);
+                        this.fadeTimeoutId = null;
+                    }
+                    this.isFading = false;
+                    
+                    if (this.activeGainNode && AppState.audioCtx) {
+                        this.activeGainNode.gain.cancelScheduledValues(AppState.audioCtx.currentTime);
+                        this.activeGainNode.gain.setValueAtTime(this.volume, AppState.audioCtx.currentTime);
+                    }
+                    if(this.domElement) {
+                        this.domElement.className = 'sound-card is-playing';
+                    }
+                }
+
+                firePlaybackSequence() {
+                    if (this.isPlaying && !this.isFading) {
+                        this.haltPlaybackInstant();
+                    }
+
+                    if (!this.audioBuffer) {
+                        showToast(`Audio asset not decoded or missing: ${this.name}`);
+                        return;
+                    }
+
+                    try {
+                        this.activeSourceNode = AppState.audioCtx.createBufferSource();
+                        this.activeSourceNode.buffer = this.audioBuffer;
+                        this.activeSourceNode.loop = this.loop;
+
+                        this.activeGainNode = AppState.audioCtx.createGain();
+                        this.activeGainNode.gain.setValueAtTime(this.volume, AppState.audioCtx.currentTime);
+
+                        this.activeSourceNode.connect(this.activeGainNode);
+                        this.activeGainNode.connect(AppState.masterGainNode);
+
+                        this.startTime = AppState.audioCtx.currentTime;
+                        this.activeSourceNode.start(0);
+                        
+                        this.isPlaying = true;
+                        this.isFading = false;
+
+                        this.domElement.className = 'sound-card is-playing';
+                        const badge = this.domElement.querySelector('.cue-state-badge');
+                        badge.textContent = 'PLAYING';
+                        badge.style.color = 'var(--success)';
+                        badge.style.display = 'inline';
+
+                        this.activeSourceNode.onended = () => {
+                            if (!this.loop && !this.isFading) {
+                                this.cleanupPlaybackDOMTrackingState();
+                            }
+                        };
+
+                        this.beginAnimationFrameTickerLoop();
+                        updateDiagnostics(`Fired Node: ${this.name}`);
+                    } catch(err) {
+                        console.error(err);
+                        showToast("Playback engine initialization context pipeline error");
+                    }
+                }
+
+                executeConfiguredStopBehaviour() {
+                    if (!this.isPlaying) return;
+
+                    if (this.stopMode === 'abrupt') {
+                        this.haltPlaybackInstant();
+                    } else if (this.stopMode === 'fade') {
+                        this.initiateFadeOutSequence();
+                    }
+                }
+
+                initiateFadeOutSequence(overrideDuration) {
+                    if (this.isFading) return; 
+                    
+                    this.isFading = true;
+                    this.domElement.classList.remove('is-playing');
+                    this.domElement.classList.add('is-fading');
+                    
+                    const badge = this.domElement.querySelector('.cue-state-badge');
+                    badge.textContent = 'FADING OUT...';
+                    badge.style.color = 'var(--warning)';
+
+                    const finalDuration = (overrideDuration !== undefined) ? overrideDuration : this.fadeDuration;
+
+                    try {
+                        const now = AppState.audioCtx.currentTime;
+                        this.activeGainNode.gain.cancelScheduledValues(now);
+                        this.activeGainNode.gain.setValueAtTime(this.activeGainNode.gain.value, now);
+                        this.activeGainNode.gain.linearRampToValueAtTime(0.0, now + finalDuration);
+
+                        this.fadeTimeoutId = setTimeout(() => {
+                            this.haltPlaybackInstant();
+                        }, finalDuration * 1000);
+
+                    } catch(e) {
+                        console.error("Fade Engine fault, reverting to fallback hard cut", e);
+                        this.haltPlaybackInstant();
+                    }
+                }
+
+                haltPlaybackInstant() {
+                    if (this.fadeTimeoutId) {
+                        clearTimeout(this.fadeTimeoutId);
+                        this.fadeTimeoutId = null;
+                    }
+
+                    this.isFading = false;
+                    
+                    try {
+                        if (this.activeSourceNode) {
+                            this.activeSourceNode.stop();
+                            this.activeSourceNode.disconnect();
+                        }
+                    } catch(e) {}
+                    
+                    try {
+                        if (this.activeGainNode) {
+                            this.activeGainNode.disconnect();
+                        }
+                    } catch(e) {}
+
+                    this.cleanupPlaybackDOMTrackingState();
+                }
+
+                cleanupPlaybackDOMTrackingState() {
+                    this.isPlaying = false;
+                    this.isFading = false;
+                    
+                    if(this.domElement) {
+                        this.domElement.className = 'sound-card';
+                        this.domElement.querySelector('.cue-state-badge').style.display = 'none';
+                        this.domElement.querySelector('.progress-bar').style.width = '0%';
+                        
+                        const durationStr = formatTimeStrings(this.duration);
+                        this.domElement.querySelector('.runtime-lbl-duration').textContent = `0:00 / ${durationStr}`;
+                    }
+                    if (this.animationFrameId) {
+                        cancelAnimationFrame(this.animationFrameId);
+                        this.animationFrameId = null;
+                    }
+                    this.drawWaveformStatic();
+                }
+
+                beginAnimationFrameTickerLoop() {
+                    const canvas = this.domElement.querySelector('.waveform-canvas');
+                    if (!canvas) return;
+                    const ctx = canvas.getContext('2d');
+                    const progressBar = this.domElement.querySelector('.progress-bar');
+                    const durationLabel = this.domElement.querySelector('.runtime-lbl-duration');
+
+                    const drawTicker = () => {
+                        if (!this.isPlaying) return;
+
+                        const elapsed = AppState.audioCtx.currentTime - this.startTime;
+                        let progressPct = (elapsed / this.duration) * 100;
+                        if (this.loop) progressPct = (elapsed % this.duration) / this.duration * 100;
+
+                        progressBar.style.width = `${Math.min(progressPct, 100)}%`;
+                        durationLabel.textContent = `${formatTimeStrings(elapsed % this.duration)} / ${formatTimeStrings(this.duration)}`;
+
+                        ctx.clearRect(0, 0, canvas.width, canvas.height);
+                        const barWidth = canvas.width / this.visualPeaks.length;
+                        
+                        for (let i = 0; i < this.visualPeaks.length; i++) {
+                            const peakHeight = this.visualPeaks[i] * canvas.height;
+                            const progressIndex = (progressPct / 100) * this.visualPeaks.length;
+                            
+                            if (this.isFading) {
+                                ctx.fillStyle = AppState.theme === 'dark' ? '#d97706' : '#b45309'; 
+                            } else if (i < progressIndex) {
+                                ctx.fillStyle = AppState.theme === 'dark' ? '#10b981' : '#059669'; 
+                            } else {
+                                ctx.fillStyle = AppState.theme === 'dark' ? '#3b82f6' : '#2563eb';
+                            }
+
+                            const liveWobble = Math.sin(Date.now() * 0.01 + i) * 2;
+                            const finalHeight = Math.max(4, peakHeight + (i < progressIndex ? liveWobble : 0));
+
+                            ctx.fillRect(
+                                i * barWidth + 1,
+                                (canvas.height - finalHeight) / 2,
+                                barWidth - 2,
+                                finalHeight
+                            );
+                        }
+
+                        this.animationFrameId = requestAnimationFrame(drawTicker);
+                    };
+
+                    this.animationFrameId = requestAnimationFrame(drawTicker);
+                }
+
+                drawWaveformStatic() {
+                    setTimeout(() => {
+                        const canvas = this.domElement?.querySelector('.waveform-canvas');
+                        if (!canvas) return;
+                        
+                        const dpr = window.devicePixelRatio || 1;
+                        const rect = canvas.getBoundingClientRect();
+                        canvas.width = rect.width * dpr;
+                        canvas.height = 40 * dpr;
+
+                        const ctx = canvas.getContext('2d');
+                        ctx.scale(dpr, dpr);
+                        ctx.clearRect(0, 0, rect.width, 40);
+
+                        const barWidth = rect.width / this.visualPeaks.length;
+                        ctx.fillStyle = AppState.theme === 'dark' ? '#4b5563' : '#9ca3af';
+
+                        for(let i=0; i < this.visualPeaks.length; i++) {
+                            const h = Math.max(4, this.visualPeaks[i] * 35);
+                            ctx.fillRect(i * barWidth + 1, (40 - h) / 2, barWidth - 2, h);
+                        }
+                    }, 50);
+                }
+
+                destroyInstance() {
+                    this.haltPlaybackInstant();
+                    this.clearKeyBinding();
+                    if(this.domElement) this.domElement.remove();
+                    this.audioBuffer = null; 
+                    AppState.soundMap.delete(this.id);
+                    recalculateDensityMatrixProfiles();
+                    evaluateGridBoundaryEmptyStates();
+                }
+            }
+
+            function formatKeyDisplay(keyStr) {
+                if(!keyStr) return '—';
+                if(keyStr.startsWith('Key')) return keyStr.substring(3);
+                if(keyStr.startsWith('Digit')) return keyStr.substring(5);
+                if(KEY_DISPLAY_LABELS[keyStr]) return KEY_DISPLAY_LABELS[keyStr];
+                return keyStr;
+            }
+
+            function assignKeyToCue(keyCode, targetCueInstance) {
+                // Strict Interlock: Block direct card layout assignment configuration mapping if space is intercepted
+                if (keyCode === 'Space' || keyCode === ' ') {
+                    showToast("Reservation clash: [Space] is exclusively bound to the Global STOP ALL master pipeline.");
+                    if(targetCueInstance.domElement) {
+                        targetCueInstance.domElement.querySelector('.key-assign-select').value = targetCueInstance.assignedKey || '';
+                        targetCueInstance.domElement.querySelector('.key-badge').classList.remove('binding-active');
+                    }
+                    AppState.activeBindingTarget = null;
+                    return false;
+                }
+
+                if(AppState.keyRegistry.has(keyCode)) {
+                    const existingBinding = AppState.keyRegistry.get(keyCode);
+                    if(existingBinding.id !== targetCueInstance.id) {
+                        showToast(`Key Clash! [${formatKeyDisplay(keyCode)}] is registered to: "${existingBinding.name}"`);
+                        if(targetCueInstance.domElement) {
+                            targetCueInstance.domElement.querySelector('.key-assign-select').value = targetCueInstance.assignedKey || '';
+                            targetCueInstance.domElement.querySelector('.key-badge').classList.remove('binding-active');
+                        }
+                        AppState.activeBindingTarget = null;
+                        return false;
+                    }
+                }
+
+                targetCueInstance.clearKeyBinding();
+                targetCueInstance.assignedKey = keyCode;
+                AppState.keyRegistry.set(keyCode, targetCueInstance);
+
+                if(targetCueInstance.domElement) {
+                    const badge = targetCueInstance.domElement.querySelector('.key-badge');
+                    badge.textContent = formatKeyDisplay(keyCode);
+                    badge.classList.remove('binding-active');
+                    targetCueInstance.domElement.querySelector('.key-assign-select').value = keyCode;
+                }
+
+                showToast(`Mapped [${formatKeyDisplay(keyCode)}] to: "${targetCueInstance.name}"`);
+                AppState.activeBindingTarget = null;
+                return true;
+            }
+
+            function registerInterfaceGlobalInterceptors() {
+                const triggerEngineAwake = () => {
+                    if (AppState.audioCtx && AppState.audioCtx.state === 'suspended') {
+                        AppState.audioCtx.resume();
+                    }
+                };
+                window.addEventListener('click', triggerEngineAwake);
+                window.addEventListener('keydown', triggerEngineAwake);
+
+                window.addEventListener('keydown', (e) => {
+                    // Global Exclusive Command Hook Route for Spacebar interceptor pipeline tracking structures
+                    if (e.key === ' ' || e.code === 'Space') {
+                        // Protect field inputs typing fields text area standard checks bounds targets entries matching
+                        if (document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'SELECT') {
+                            e.preventDefault();
+                            if(e.repeat) return;
+                            executeGlobalConfiguredStopAllRoute();
+                            return;
+                        }
+                    }
+
+                    if (AppState.activeBindingTarget) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        if (['Shift', 'Control', 'Alt', 'Meta'].includes(e.key)) return;
+                        assignKeyToCue(e.code || e.key, AppState.activeBindingTarget);
+                        return;
+                    }
+
+                    if (document.activeElement.tagName === 'INPUT' || document.activeElement.tagName === 'SELECT') {
+                        if(e.key === 'Escape' && document.activeElement.id === 'search-bar') document.activeElement.blur();
+                        return;
+                    }
+
+                    const incomingCode = e.code || e.key;
+                    if(AppState.keyRegistry.has(incomingCode)) {
+                        if(e.repeat) return; 
+                        e.preventDefault();
+                        
+                        initAudioEngine();
+                        AppState.keyRegistry.get(incomingCode).handleToggleAction();
+                        return;
+                    }
+
+                    if (e.key === 'Escape') {
+                        e.preventDefault();
+                        executeGlobalConfiguredStopAllRoute();
+                    }
+                    if (e.key === '/') {
+                        e.preventDefault();
+                        document.getElementById('search-bar').focus();
+                    }
+                });
+
+                const btnLoad = document.getElementById('btn-load');
+                const btnEmptyLoad = document.getElementById('btn-empty-load');
+                const fileFallbackInput = document.getElementById('fallback-file-input');
+
+                const triggeredLoadRoutine = async () => {
+                    initAudioEngine();
+                    if (window.showDirectoryPicker) {
+                        try {
+                            const dirHandle = await window.showDirectoryPicker();
+                            await ingestDirectoryHandleRecursively(dirHandle);
+                        } catch (err) {
+                            console.warn("Directory Picker unvailable, opening default document payload pipeline standard channels...", err);
+                            fileFallbackInput.click();
+                        }
+                    } else {
+                        fileFallbackInput.click();
+                    }
+                };
+
+                btnLoad.addEventListener('click', triggeredLoadRoutine);
+                btnEmptyLoad.addEventListener('click', triggeredLoadRoutine);
+                fileFallbackInput.addEventListener('change', (e) => {
+                    if(e.target.files.length > 0) ingestStandardFileListPayload(e.target.files);
+                });
+
+                document.getElementById('master-volume').addEventListener('input', (e) => {
+                    const v = parseFloat(e.target.value);
+                    if(AppState.masterGainNode && AppState.audioCtx) {
+                        AppState.masterGainNode.gain.setValueAtTime(v, AppState.audioCtx.currentTime);
+                    }
+                });
+
+                document.getElementById('btn-stop-all').addEventListener('click', executeGlobalConfiguredStopAllRoute);
+
+                const lockBtn = document.getElementById('btn-lock');
+                lockBtn.addEventListener('click', () => {
+                    AppState.isLocked = !AppState.isLocked;
+                    document.body.classList.toggle('performance-locked', AppState.isLocked);
+                    const lockIcon = document.getElementById('lock-icon');
+                    const lockText = document.getElementById('lock-text');
+                    
+                    if(AppState.isLocked) {
+                        lockIcon.innerHTML = '<use href="#icon-lock"></use>';
+                        lockText.textContent = "Unlock Console";
+                        lockBtn.classList.add('btn-lock-active');
+                        showToast("Performance Lock Active. Configurations protected.");
+                    } else {
+                        lockIcon.innerHTML = '<use href="#icon-unlock"></use>';
+                        lockText.textContent = "Performance Lock";
+                        lockBtn.classList.remove('btn-lock-active');
+                        showToast("Console Unlocked. Configuration options editable.");
+                    }
+                });
+
+                document.getElementById('search-bar').addEventListener('input', (e) => {
+                    AppState.searchQuery = e.target.value.toLowerCase().trim();
+                    AppState.isSearching = AppState.searchQuery.length > 0;
+                    executeSynchronousUIGridFilterSearch();
+                });
+
+                document.getElementById('btn-theme-toggle').addEventListener('click', () => {
+                    AppState.theme = AppState.theme === 'dark' ? 'light' : 'dark';
+                    document.documentElement.setAttribute('data-theme', AppState.theme);
+                    AppState.soundMap.forEach(cue => cue.drawWaveformStatic());
+                });
+
+                document.getElementById('btn-fullscreen').addEventListener('click', () => {
+                    if (!document.fullscreenElement) {
+                        document.documentElement.requestFullscreen().catch(() => showToast("Fullscreen mode error"));
+                    } else {
+                        document.exitFullscreen();
+                    }
+                });
+
+                document.getElementById('btn-save-cfg').addEventListener('click', exportConfigurationJSONPayload);
+                document.getElementById('btn-load-cfg').addEventListener('click', () => {
+                    const fileInput = document.createElement('input');
+                    fileInput.type = 'file';
+                    fileInput.accept = '.json';
+                    fileInput.onchange = (e) => {
+                        const file = e.target.files[0];
+                        if (file) {
+                            const reader = new FileReader();
+                            reader.onload = (event) => importConfigurationJSONPayload(event.target.result);
+                            reader.readAsText(file);
+                        }
+                    };
+                    fileInput.click();
+                });
+
+                let resizeDebounceTimer;
+                window.addEventListener('resize', () => {
+                    clearTimeout(resizeDebounceTimer);
+                    resizeDebounceTimer = setTimeout(() => {
+                        AppState.soundMap.forEach(cue => cue.drawWaveformStatic());
+                    }, 150);
+                });
+            }
+
+            async function ingestDirectoryHandleRecursively(directoryHandle) {
+                let countsLoaded = 0;
+                showToast("Scanning selected spaces...");
+                for await (const entry of directoryHandle.values()) {
+                    if (entry.kind === 'file' && assertFormatExtensionValidity(entry.name)) {
+                        const file = await entry.getFile();
+                        const uniqueId = 'cue-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                        const newCueInstance = new SoundCue(uniqueId, entry.name, file);
+                        AppState.soundMap.set(uniqueId, newCueInstance);
+                        countsLoaded++;
+                        appendCueCardToViewportGrid(newCueInstance);
+                    }
+                }
+                evaluateGridBoundaryEmptyStates();
+                recalculateDensityMatrixProfiles();
+                showToast(`Loaded ${countsLoaded} sound channels.`);
+                triggerAsyncPreloadPoolSequence();
+            }
+
+            function ingestStandardFileListPayload(fileList) {
+                let countsLoaded = 0;
+                for (let i = 0; i < fileList.length; i++) {
+                    const file = fileList[i];
+                    if (assertFormatExtensionValidity(file.name)) {
+                        const uniqueId = 'cue-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                        const newCueInstance = new SoundCue(uniqueId, file.name, file);
+                        AppState.soundMap.set(uniqueId, newCueInstance);
+                        countsLoaded++;
+                        appendCueCardToViewportGrid(newCueInstance);
+                    }
+                }
+                evaluateGridBoundaryEmptyStates();
+                recalculateDensityMatrixProfiles();
+                showToast(`Loaded ${countsLoaded} targets.`);
+                triggerAsyncPreloadPoolSequence();
+            }
+
+            function assertFormatExtensionValidity(filenameStr) {
+                return /\.(mp3|wav|ogg|m4a|flac)$/i.test(filenameStr);
+            }
+
+            function appendCueCardToViewportGrid(cueInstance) {
+                const grid = document.getElementById('sound-grid');
+                grid.appendChild(cueInstance.renderDOMNode());
+            }
+
+            async function triggerAsyncPreloadPoolSequence() {
+                updateDiagnostics("Preloading cache buffers...");
+                let completedCount = 0;
+                const entryCueInstances = Array.from(AppState.soundMap.values());
+                for(const cue of entryCueInstances) {
+                    if (!cue.audioBuffer) {
+                        const outcomeStatus = await cue.asyncPreloadData();
+                        if (outcomeStatus) completedCount++;
+                        document.getElementById('system-stats').textContent = `Cues: ${AppState.soundMap.size} | Preloaded: ${completedCount}/${AppState.soundMap.size}`;
+                    }
+                }
+                updateDiagnostics("Workspace Ready & Latency Optimized");
+            }
+
+            function executeSynchronousUIGridFilterSearch() {
+                AppState.soundMap.forEach(cueInstance => {
+                    if(!cueInstance.domElement) return;
+                    const matchesSearchCriteria = cueInstance.name.toLowerCase().includes(AppState.searchQuery) || 
+                                                 (cueInstance.assignedKey && cueInstance.assignedKey.toLowerCase().includes(AppState.searchQuery));
+                    if(AppState.isSearching && !matchesSearchCriteria) {
+                        cueInstance.domElement.style.display = 'none';
+                    } else {
+                        cueInstance.domElement.style.display = 'flex';
+                        cueInstance.drawWaveformStatic();
+                    }
+                });
+            }
+
+            function recalculateDensityMatrixProfiles() {
+                const gridElement = document.getElementById('sound-grid');
+                if (AppState.soundMap.size > 48) {
+                    gridElement.className = 'grid-viewport dense-grid';
+                } else {
+                    gridElement.className = 'grid-viewport';
+                }
+                document.getElementById('system-stats').textContent = `Cues: ${AppState.soundMap.size} | Live Workspace Nodes`;
+            }
+
+            function evaluateGridBoundaryEmptyStates() {
+                const emptyViewElement = document.getElementById('empty-state-view');
+                emptyViewElement.style.display = AppState.soundMap.size === 0 ? 'flex' : 'none';
+            }
+
+            /**
+             * Advanced Configurable Global Termination Pipeline Matrix Module
+             */
+            function executeGlobalConfiguredStopAllRoute() {
+                const structuralBehaviourMode = document.getElementById('global-stop-behaviour').value;
+                showToast(`GLOBAL COMMAND DEPLOYED: MASTER STOP CHANNELS WITH MODE ENVELOPE [${structuralBehaviourMode.toUpperCase()}]`);
+                
+                AppState.soundMap.forEach(cueInstance => {
+                    if (cueInstance.isPlaying) {
+                        if (structuralBehaviourMode === 'abrupt') {
+                            cueInstance.haltPlaybackInstant();
+                        } else if (structuralBehaviourMode === 'fade') {
+                            // Run a uniform 2-second safe fade teardown loop for the global stop configuration override
+                            cueInstance.initiateFadeOutSequence(2);
+                        }
+                    }
+                });
+                updateDiagnostics("Configured Stop All Fired");
+            }
+
+            function exportConfigurationJSONPayload() {
+                const serializableProfileArray = [];
+                AppState.soundMap.forEach(cue => {
+                    serializableProfileArray.push({
+                        name: cue.name,
+                        assignedKey: cue.assignedKey,
+                        volume: cue.volume,
+                        loop: cue.loop,
+                        stopMode: cue.stopMode,
+                        fadeDuration: cue.fadeDuration
+                    });
+                });
+
+                const masterPayloadEnvelope = {
+                    version: "2026.5.0-BajauneSpacebarEngine",
+                    masterVolume: parseFloat(document.getElementById('master-volume').value),
+                    globalStopBehaviour: document.getElementById('global-stop-behaviour').value,
+                    themeMode: AppState.theme,
+                    cuesMatrixConfig: serializableProfileArray
+                };
+
+                const blobDataStreamString = new Blob([JSON.stringify(masterPayloadEnvelope, null, 2)], { type: 'application/json' });
+                const transientAnchorNode = document.createElement('a');
+                transientAnchorNode.href = URL.createObjectURL(blobDataStreamString);
+                transientAnchorNode.download = `bajaune-config-${Date.now()}.json`;
+                transientAnchorNode.click();
+                showToast("Configuration saved successfully.");
+            }
+
+            function importConfigurationJSONPayload(jsonStringContent) {
+                try {
+                    const parsedPayload = JSON.parse(jsonStringContent);
+                    if (!parsedPayload.cuesMatrixConfig) {
+                        showToast("Invalid configuration schema definition format file.");
+                        return;
+                    }
+
+                    if(parsedPayload.masterVolume !== undefined) {
+                        document.getElementById('master-volume').value = parsedPayload.masterVolume;
+                        if(AppState.masterGainNode && AppState.audioCtx) {
+                            AppState.masterGainNode.gain.setValueAtTime(parsedPayload.masterVolume, AppState.audioCtx.currentTime);
+                        }
+                    }
+
+                    if(parsedPayload.globalStopBehaviour !== undefined) {
+                        document.getElementById('global-stop-behaviour').value = parsedPayload.globalStopBehaviour;
+                    }
+
+                    let appliedCount = 0;
+                    parsedPayload.cuesMatrixConfig.forEach(cfgItem => {
+                        AppState.soundMap.forEach(cueInstance => {
+                            if (cueInstance.name === cfgItem.name) {
+                                cueInstance.volume = cfgItem.volume;
+                                cueInstance.loop = cfgItem.loop;
+                                cueInstance.stopMode = cfgItem.stopMode || 'abrupt';
+                                cueInstance.fadeDuration = cfgItem.fadeDuration || 2;
+                                
+                                if(cueInstance.domElement) {
+                                    cueInstance.domElement.querySelector('.val-vol-slider').value = cfgItem.volume;
+                                    cueInstance.domElement.querySelector('.act-loop-toggle').classList.toggle('active-loop', cfgItem.loop);
+                                    cueInstance.domElement.querySelector('.sel-stop-mode').value = cueInstance.stopMode;
+                                    cueInstance.domElement.querySelector('.sel-fade-time').value = cueInstance.fadeDuration;
+                                    cueInstance.domElement.querySelector('.sel-fade-time-container').style.display = cueInstance.stopMode === 'fade' ? 'flex' : 'none';
+                                }
+
+                                if(cfgItem.assignedKey) {
+                                    assignKeyToCue(cfgItem.assignedKey, cueInstance);
+                                }
+                                appliedCount++;
+                            }
+                        });
+                    });
+
+                    showToast(`Restored configuration mappings across ${appliedCount} cues.`);
+                } catch (err) {
+                    console.error(err);
+                    showToast("Failed to safely reconcile data payload mapping updates.");
+                }
+            }
+
+            function formatTimeStrings(timeInSecondsFloat) {
+                if (isNaN(timeInSecondsFloat) || !isFinite(timeInSecondsFloat)) return "0:00";
+                const mins = Math.floor(timeInSecondsFloat / 60);
+                const secs = Math.floor(timeInSecondsFloat % 60);
+                return `${mins}:${secs.toString().padStart(2, '0')}`;
+            }
+
+            function updateDiagnostics(messageStr) {
+                const textNode = document.getElementById('diagnostic-text');
+                const dotNode = document.getElementById('diagnostic-dot');
+                textNode.textContent = messageStr;
+                dotNode.classList.add('active');
+                setTimeout(() => dotNode.classList.remove('active'), 1000);
+            }
+
+            function showToast(messageText) {
+                const portal = document.getElementById('toast-portal');
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = messageText;
+                portal.appendChild(toast);
+                setTimeout(() => {
+                    toast.style.opacity = '0';
+                    toast.style.transition = 'opacity 0.3s ease';
+                    setTimeout(() => toast.remove(), 300);
+                }, 3500);
+            }
+
+            document.addEventListener('DOMContentLoaded', () => {
+                registerInterfaceGlobalInterceptors();
+                evaluateGridBoundaryEmptyStates();
+                updateDiagnostics("Bajaune Engine Live");
+            });
+        })();
+    </script>
+</body>
+</html>
